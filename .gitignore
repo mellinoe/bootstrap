@@ -11,3 +11,6 @@ dotnetcli
 
 # nano swap
 *.swp
+
+# CoreCLR build log
+coreclr.log

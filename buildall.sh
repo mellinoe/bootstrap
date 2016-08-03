@@ -3,7 +3,7 @@ usage()
     echo "builds a bootstrap CLI from sources"
 }
 
-__build_arch=amd64
+__build_arch=x64
 __rid=
 __corelib=
 __coreclrbin=
@@ -68,7 +68,8 @@ fi
 if [ "$__skipcoreclr" != "true" ]
     then
         echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
-        export __coreclrbin=$(coreclr/build.sh $__configuration | sed -n -e 's/^.*Product binaries are available at //p')
+        coreclr/build.sh $__configuration $__build_arch 2>&1 | tee coreclr.log
+        export __coreclrbin=$(cat coreclr.log | sed -n -e 's/^.*Product binaries are available at //p')
         echo "CoreCLR binaries will be copied from $__coreclrbin"
 fi
 
