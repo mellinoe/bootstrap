@@ -4,6 +4,7 @@ usage()
 }
 
 __build_arch=x64
+__build_os=Linux
 __rid=
 __corelib=
 __coreclrbin=
@@ -23,6 +24,10 @@ while [ "$1" != "" ]; do
         --rid)
             shift
             __runtime_id=$1
+            ;;
+        --os)
+            shift
+            __build_os=$1
             ;;
         debug)
             __configuration=debug
@@ -50,7 +55,11 @@ while [ "$1" != "" ]; do
             shift
             __coreclrbin=$1
             ;;
-        *)
+        --corefxbin)
+            shift
+            __corefxbin=$1
+            ;;
+         *)
         echo "Unknown argument to build.sh $1"; exit 1
     esac
     shift
@@ -76,12 +85,9 @@ fi
 if [ "$__skipcorefx" != "true" ]
     then
         echo "**** BUILDING COREFX NATIVE COMPONENTS ****"
-        if [ ! -f corefx/version.c ]
-            then
-                echo "static char sccsid[] __attribute__((used)) = \"@(#)No version information produced\";" > corefx/version.c
-        fi
-
-        corefx/src/Native/build-native.sh
+        corefx/src/Native/build-native.sh $__build_arch $__configuration $__build_os 2>&1 | tee corefx.log
+        export __corefxbin=$(cat corefx.log | sed -n -e 's/^.*Build files have been written to: //p')
+        echo "CoreFX binaries will be copied from $__corefxbin"
 fi
 
 if [ "$__skiplibuv" != "true" ]
@@ -112,7 +118,12 @@ mkdir -p dotnetcli/host/fxr/1.0.1
 cp cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
 cp cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
 
-cp corefx/Native/System.* dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+if [ "$__corefxbin" != "" ]
+    then
+        cp $__corefxbin/**/System.* dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+else
+    echo "CoreFX binaries will not be copied. Specify corefxbin or do not skip the corefx build."
+fi
 
 cp libuv/.libs/libuv.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 
