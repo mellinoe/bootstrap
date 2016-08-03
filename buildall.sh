@@ -24,10 +24,10 @@ while [ "$1" != "" ]; do
             shift
             __runtime_id=$1
             ;;
-        --debug)
+        debug)
             __configuration=debug
             ;;
-        --release
+        release)
             __configuration=release
             ;;
         --corelib)
@@ -68,7 +68,8 @@ fi
 if [ "$__skipcoreclr" != "true" ]
     then
         echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
-        export bindir=$(coreclr/build.sh $__configuration | sed -n -e 's/^.*Product binaries are available at //p')
+        export __coreclrbin=$(coreclr/build.sh $__configuration | sed -n -e 's/^.*Product binaries are available at //p')
+        echo "CoreCLR binaries will be copied from $__coreclrbin"
 fi
 
 if [ "$__skipcorefx" != "true" ]
