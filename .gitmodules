@@ -7,3 +7,6 @@
 [submodule "corefx"]
 	path = corefx
 	url = https://github.com/dotnet/corefx
+[submodule "libuv"]
+	path = libuv
+	url = https://github.com/libuv/libuv
