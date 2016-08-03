@@ -3,7 +3,7 @@ usage()
     echo "builds a bootstrap CLI from sources"
 }
 
-__buildArch=
+__buildArch=amd64
 __rid=
 __corelib=
 
@@ -35,6 +35,9 @@ while [ "$1" != "" ]; do
         --skipcorefx)
             __skipcorefx=true
             ;;
+        --skiplibuv)
+            __skiplibuv=true
+            ;;
         *)
         echo "Unknown argument to build.sh $1"; exit 1
     esac
@@ -52,18 +55,25 @@ fi
 
 if [ "$__skipcoreclr" != "true" ]
     then
-        echo *** BUILDING CORECLR NATIVE COMPONENTS ****
+        echo **** BUILDING CORECLR NATIVE COMPONENTS ****
         coreclr/build.sh
 fi
 
 if [ "$__skipcorefx" != "true" ]
     then
+        echo **** BUILDING COREFX NATIVE COMPONENTS ****
         if [ ! -f corefx/version.c ]
             then
                 echo "static char sccsid[] __attribute__((used)) = \"@(#)No version information produced\";" > corefx/version.c
         fi
 
         corefx/src/Native/build-native.sh
+fi
+
+if [ "$__skiplibuv" != "true" ]
+    then
+        echo **** BUILDING LIBUV ****
+        ./build-libuv.sh
 fi
 
 cp coreclr/bin/Product/Linux.x64.Debug/*so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
@@ -79,6 +89,8 @@ cp cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
 cp cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
 
 cp corefx/Native/System.* dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+
+cp libuv/.libs/libuv.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 
 # COPY SYSTEM.PRIVATE.CORELIB.DLL FROM SOMEWHERE
 if [ "$__corelib" != "" ]

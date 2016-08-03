@@ -8,3 +8,6 @@ cli/
 
 # Produced CLI
 dotnetcli
+
+# nano swap
+*.swp
