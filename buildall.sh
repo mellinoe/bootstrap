@@ -9,6 +9,7 @@ __rid=
 __corelib=
 __coreclrbin=
 __configuration=debug
+__crossgen=false
 
 while [ "$1" != "" ]; do
         lowerI="$(echo $1 | awk '{print tolower($0)}')"
@@ -59,6 +60,9 @@ while [ "$1" != "" ]; do
             shift
             __corefxbin=$1
             ;;
+        --crossgen)
+            __crossgen=true
+            ;;
          *)
         echo "Unknown argument to build.sh $1"; exit 1
     esac
@@ -103,6 +107,7 @@ if [ "$__coreclrbin" != "" ]
     then
         cp $__coreclrbin/*so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
         cp $__coreclrbin/corerun dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+        cp $__coreclrbin/crossgen dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 else
     echo "CoreCLR binaries will not be copied. Specify coreclrbin or do not skip the coreclr build."
 fi
@@ -131,6 +136,11 @@ cp libuv/.libs/libuv.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 if [ "$__corelib" != "" ]
     then
         cp "$__corelib" dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+fi
+
+if [ "$__corelib" != "" && "$__crossgen" == "true" ]
+    then
+        dotnetcli/shared/Microsoft.NETCore.App/1.0.0/crossgen dotnetcli/shared/Microsoft.NETCore.App/1.0.0/System.Private.CoreLib.dll
 fi
 
 # RUN STUFF
