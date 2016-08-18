@@ -138,7 +138,7 @@ if [ "$__corelib" != "" ]
         cp "$__corelib" dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 fi
 
-if [ "$__corelib" != "" && "$__crossgen" == "true" ]
+if [[ "$__corelib" != "" && "$__crossgen" == "true" ]]
     then
         dotnetcli/shared/Microsoft.NETCore.App/1.0.0/crossgen dotnetcli/shared/Microsoft.NETCore.App/1.0.0/System.Private.CoreLib.dll
 fi
