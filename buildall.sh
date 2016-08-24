@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 usage()
 {
     echo "builds a bootstrap CLI from sources"
