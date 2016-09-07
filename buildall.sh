@@ -115,6 +115,7 @@ fi
 
 
 cp cli/exe/dotnet dotnetcli
+cp cli/exe/dotnet dotnetcli/shared/Microsoft.NETCore.App/1.0.0/corehost
 
 cp cli/dll/libhostpolicy.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 cp cli/dll/libhostpolicy.so dotnetcli/sdk/1.0.0-preview3-003223
