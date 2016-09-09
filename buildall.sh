@@ -145,5 +145,8 @@ if [[ "$__corelib" != "" && "$__crossgen" == "true" ]]
         dotnetcli/shared/Microsoft.NETCore.App/1.0.0/crossgen dotnetcli/shared/Microsoft.NETCore.App/1.0.0/System.Private.CoreLib.dll
 fi
 
+# Find/replace runtime ID in deps.json:
+sed -i -- 's/ubuntu.16.04-x64/$__runtime_id/g' dotnetcli/shared/Microsoft.NETCore.App/1.0.0/Microsoft.NETCore.App.deps.json
+
 # RUN STUFF
 
