@@ -75,7 +75,7 @@ cp -r seed-cli dotnetcli
 if [ "$__skipcoresetup" != "true" ]
     then
         echo "**** BUILDING CORE-SETUP NATIVE COMPONENTS ****"
-        core-setup/src/corehost/build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash ff2908e099bbe6beac1f51afe37c9d176fb170e4
+        core-setup/src/corehost/build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash b9b177468e9807e3b269bed630e310d5b8552fd8
 fi
 
 
@@ -146,7 +146,7 @@ if [[ "$__corelib" != "" && "$__crossgen" == "true" ]]
 fi
 
 # Find/replace runtime ID in deps.json:
-sed -i -- 's/ubuntu.16.04-x64/$__runtime_id/g' dotnetcli/shared/Microsoft.NETCore.App/1.0.0/Microsoft.NETCore.App.deps.json
+sed -i -- "s/ubuntu.16.04-x64/$__runtime_id/g" dotnetcli/shared/Microsoft.NETCore.App/1.0.0/Microsoft.NETCore.App.deps.json
 
 # RUN STUFF
 
