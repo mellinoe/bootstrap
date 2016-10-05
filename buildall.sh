@@ -6,7 +6,7 @@ usage()
 
 __build_arch=x64
 __build_os=Linux
-__rid=
+__runtime_id=
 __corelib=
 __coreclrbin=
 __configuration=debug
