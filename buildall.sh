@@ -75,24 +75,30 @@ cp -r seed-cli dotnetcli
 if [ "$__skipcoresetup" != "true" ]
     then
         echo "**** BUILDING CORE-SETUP NATIVE COMPONENTS ****"
-        core-setup/src/corehost/build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash b9b177468e9807e3b269bed630e310d5b8552fd8
+        cd ./core-setup/src/corehost/
+        sh build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash b9b177468e9807e3b269bed630e310d5b8552fd8
+        cd ../../..
 fi
 
 
 if [ "$__skipcoreclr" != "true" ]
     then
         echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
-        coreclr/build.sh $__configuration $__build_arch 2>&1 | tee coreclr.log
+        cd ./coreclr/
+        sh build.sh $__configuration $__build_arch 2>&1 | tee coreclr.log
         export __coreclrbin=$(cat coreclr.log | sed -n -e 's/^.*Product binaries are available at //p')
         echo "CoreCLR binaries will be copied from $__coreclrbin"
+        cd ..
 fi
 
 if [ "$__skipcorefx" != "true" ]
     then
         echo "**** BUILDING COREFX NATIVE COMPONENTS ****"
-        corefx/src/Native/build-native.sh $__build_arch $__configuration $__build_os 2>&1 | tee corefx.log
+        cd ./corefx/src/Native/
+        sh build-native.sh $__build_arch $__configuration $__build_os 2>&1 | tee corefx.log
         export __corefxbin=$(cat corefx.log | sed -n -e 's/^.*Build files have been written to: //p')
         echo "CoreFX binaries will be copied from $__corefxbin"
+        cd ../../..
 fi
 
 if [ "$__skiplibuv" != "true" ]
