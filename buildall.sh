@@ -6,7 +6,7 @@ usage()
 
 __build_arch=x64
 __build_os=Linux
-__runtime_id=
+__runtime_id=Gentoo
 __corelib=
 __coreclrbin=
 __configuration=debug
@@ -75,30 +75,36 @@ cp -r seed-cli dotnetcli
 if [ "$__skipcoresetup" != "true" ]
     then
         echo "**** BUILDING CORE-SETUP NATIVE COMPONENTS ****"
-        core-setup/src/corehost/build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash b9b177468e9807e3b269bed630e310d5b8552fd8
+	cd ./core-setup/src/corehost/
+        sh build.sh --arch $__build_arch --rid $__runtime_id --hostver 1.0.2 --fxrver 1.0.2 --policyver 1.0.2 --commithash b9b177468e9807e3b269bed630e310d5b8552fd8
+	cd ../../..
 fi
 
 
 if [ "$__skipcoreclr" != "true" ]
     then
         echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
-        coreclr/build.sh $__configuration $__build_arch 2>&1 | tee coreclr.log
+        cd ./coreclr/
+	sh build.sh $__configuration $__build_arch 2>&1 | tee coreclr.log
         export __coreclrbin=$(cat coreclr.log | sed -n -e 's/^.*Product binaries are available at //p')
         echo "CoreCLR binaries will be copied from $__coreclrbin"
+	cd ..
 fi
 
 if [ "$__skipcorefx" != "true" ]
     then
         echo "**** BUILDING COREFX NATIVE COMPONENTS ****"
-        corefx/src/Native/build-native.sh $__build_arch $__configuration $__build_os 2>&1 | tee corefx.log
+	cd ./corefx/src/Native/
+        sh build-native.sh $__build_arch $__configuration $__build_os 2>&1 | tee corefx.log
         export __corefxbin=$(cat corefx.log | sed -n -e 's/^.*Build files have been written to: //p')
         echo "CoreFX binaries will be copied from $__corefxbin"
+	cd ../../..
 fi
 
 if [ "$__skiplibuv" != "true" ]
     then
         echo "**** BUILDING LIBUV ****"
-        ./build-libuv.sh
+        sh build-libuv.sh
 fi
 
 echo "**** Copying binaries to dotnetcli/ ****"
@@ -113,17 +119,16 @@ else
     echo "CoreCLR binaries will not be copied. Specify coreclrbin or do not skip the coreclr build."
 fi
 
+cp ./core-setup/src/corehost/cli/exe/dotnet dotnetcli
+cp ./core-setup/src/corehost/cli/exe/dotnet dotnetcli/shared/Microsoft.NETCore.App/1.0.0/corehost
+  
+cp ./core-setup/src/corehost/cli/dll/libhostpolicy.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+cp ./core-setup/src/corehost/cli/dll/libhostpolicy.so dotnetcli/sdk/1.0.0-preview3-003223
 
-cp cli/exe/dotnet dotnetcli
-cp cli/exe/dotnet dotnetcli/shared/Microsoft.NETCore.App/1.0.0/corehost
-
-cp cli/dll/libhostpolicy.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
-cp cli/dll/libhostpolicy.so dotnetcli/sdk/1.0.0-preview3-003223
-
-cp cli/fxr/libhostfxr.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 mkdir -p dotnetcli/host/fxr/1.0.1
-cp cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
-cp cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
 
 if [ "$__corefxbin" != "" ]
     then
@@ -149,4 +154,3 @@ fi
 sed -i -- "s/ubuntu.16.04-x64/$__runtime_id/g" dotnetcli/shared/Microsoft.NETCore.App/1.0.0/Microsoft.NETCore.App.deps.json
 
 # RUN STUFF
-
