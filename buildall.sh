@@ -75,7 +75,7 @@ cp -r seed-cli dotnetcli
 if [ "$__skipcoresetup" != "true" ]
     then
         echo "**** BUILDING CORE-SETUP NATIVE COMPONENTS ****"
-        core-setup/src/corehost/build.sh --arch $__build_arch --rid $__runtime_id --hostver "1.0.2" --fxrver "1.0.2" --policyver "1.0.2" --commithash "b9b177468e9807e3b269bed630e310d5b8552fd8"
+        core-setup/src/corehost/build.sh --arch "$__build_arch" --rid "$__runtime_id" --hostver "1.0.2" --fxrver "1.0.2" --policyver "1.0.2" --commithash "b9b177468e9807e3b269bed630e310d5b8552fd8"
 fi
 
 
