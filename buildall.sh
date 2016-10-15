@@ -70,7 +70,8 @@ while [ "$1" != "" ]; do
     shift
 done
 
-cp -r seed-cli dotnetcli
+mkdir -p dotnetcli
+cp -r seed-cli/* dotnetcli
 
 if [ "$__skipcoresetup" != "true" ]
     then
