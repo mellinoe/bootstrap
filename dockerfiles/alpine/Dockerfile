@@ -5,3 +5,7 @@ RUN apk add bash gcc clang clang-dev cmake make build-base icu-dev python gettex
 # Other sources
 RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache libunwind-dev util-linux-dev
 RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/testing add --no-cache lldb-dev lttng-ust-dev
+
+RUN apk add ca-certificates && update-ca-certificates && apk add openssl
+
+ENV __PUBLISH_RID=ubuntu.14.04-x64
