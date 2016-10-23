@@ -4,8 +4,8 @@ usage()
     echo "builds a bootstrap CLI from sources"
 }
 
-__build_arch=x64
-__build_os=Linux
+__build_arch=$(uname -p)
+__build_os=$(uname -s)
 __runtime_id=
 __corelib=
 __coreclrbin=
