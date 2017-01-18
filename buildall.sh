@@ -114,17 +114,16 @@ else
     echo "CoreCLR binaries will not be copied. Specify coreclrbin or do not skip the coreclr build."
 fi
 
+cp ./core-setup/src/corehost/cli/exe/dotnet dotnetcli
+cp ./core-setup/src/corehost/cli/exe/dotnet dotnetcli/shared/Microsoft.NETCore.App/1.0.0/corehost
 
-cp cli/exe/dotnet dotnetcli
-cp cli/exe/dotnet dotnetcli/shared/Microsoft.NETCore.App/1.0.0/corehost
+cp ./core-setup/src/corehost/cli/dll/libhostpolicy.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+cp ./core-setup/src/corehost/cli/dll/libhostpolicy.so dotnetcli/sdk/1.0.0-preview3-003223
 
-cp cli/dll/libhostpolicy.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
-cp cli/dll/libhostpolicy.so dotnetcli/sdk/1.0.0-preview3-003223
-
-cp cli/fxr/libhostfxr.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/shared/Microsoft.NETCore.App/1.0.0
 mkdir -p dotnetcli/host/fxr/1.0.1
-cp cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
-cp cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/host/fxr/1.0.1/
+cp ./core-setup/src/corehost/cli/fxr/libhostfxr.so dotnetcli/sdk/1.0.0-preview3-003223
 
 if [ "$__corefxbin" != "" ]
     then
